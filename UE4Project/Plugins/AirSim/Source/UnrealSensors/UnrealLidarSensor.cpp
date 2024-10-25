@@ -132,15 +132,12 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
 
                 // Retrieve material from the hit mesh
                 UMaterialInterface* material = meshComponents[i]->GetMaterial(0);
-                FLinearColor hitColor;
-                UTexture* texture = nullptr;
-                if (material != nullptr)
-                {   
-                    printf("%d", i);
+                material->GetScalarParameterValue(FName("Intensity"), intensity);
+                //FLinearColor hitColor;
+                //UTexture* texture = nullptr;
+                /*
                     material->GetVectorParameterValue(FName("BaseColor"), hitColor);
-                    material->GetTextureParameterValue(FName("BaseTexture"), texture);
-
-                    material->GetScalarParameterValue(FName("Intensity"), intensity);
+                    material->GetTextureParameterValue(FName("BaseTexture"), texture)
                     //intensity = (hitColor.R + hitColor.G + hitColor.B)/3;
 
                     /*UTexture2D* texture2D = Cast<UTexture2D>(texture);// Lock the texture to read pixel data
@@ -166,8 +163,8 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
                             mipMap.BulkData.Unlock(); // Unlock the data after use
                         }
                         mipMap.BulkData.Unlock(); // Ensure to unlock even if sampling fails
-                    }*/
-                }
+                    }
+                }*/
             }
         }
 
