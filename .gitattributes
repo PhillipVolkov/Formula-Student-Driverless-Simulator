@@ -3,5 +3,8 @@ UE4Project/Plugins/AirSim/Content/VehicleAdv/SUV/SUV.uasset filter=lfs diff=lfs 
 UE4Project/Plugins/AirSim/Content/VehicleAdv/SUV/Formula/FormulaMesh.uasset filter=lfs diff=lfs merge=lfs -text
 UE4Project/Content/blueprint/StartFinishLine.uasset filter=lfs diff=lfs merge=lfs -text
 *.uasset filter=lfs diff=lfs merge=lfs -text
+Blocks.exe filter=lfs diff=lfs merge=lfs -text
+FSOnline/ filter=lfs diff=lfs merge=lfs -text
+FSOnline/Binaries/Win64/Blocks.exe filter=lfs diff=lfs merge=lfs -text
 *.pak filter=lfs diff=lfs merge=lfs -text
 *.exe filter=lfs diff=lfs merge=lfs -text
