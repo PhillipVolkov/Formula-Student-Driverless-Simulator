@@ -72,13 +72,15 @@ void UnrealLidarSensor::getPointCloud(const msr::airlib::Pose& lidar_pose, const
             const float horizontal_angle = std::fmod(laser_start + angle_distance_of_laser_measure * i, 360.0f);
        
             Vector3r point;
+            float intensity;
             int segmentationID = -1;
             // shoot laser and get the impact point, if any
-            if (shootLaser(lidar_pose, vehicle_pose, laser, horizontal_angle, vertical_angle, params, point, segmentationID))
+            if (shootLaser(lidar_pose, vehicle_pose, laser, horizontal_angle, vertical_angle, params, point, intensity, segmentationID))
             {
                 point_cloud.emplace_back(point.x());
                 point_cloud.emplace_back(point.y());
                 point_cloud.emplace_back(point.z());
+                point_cloud.emplace_back(intensity);
                 segmentation_cloud.emplace_back(segmentationID);
             }
         }
@@ -90,7 +92,7 @@ void UnrealLidarSensor::getPointCloud(const msr::airlib::Pose& lidar_pose, const
 // simulate shooting a laser via Unreal ray-tracing.
 bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const msr::airlib::Pose& vehicle_pose,
     const uint32 laser, const float horizontal_angle, const float vertical_angle, 
-    const msr::airlib::LidarSimpleParams params, Vector3r &point, int &segmentationID)
+    const msr::airlib::LidarSimpleParams params, Vector3r &point, float &intensity, int &segmentationID)
 {
     // start position
     Vector3r start = VectorMath::add(lidar_pose, vehicle_pose).position;
@@ -126,6 +128,46 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
             for (int i = 0; i < meshComponents.Num(); i++)
             {
                 segmentationID = segmentationID == -1 ? meshComponents[i]->CustomDepthStencilValue : segmentationID;
+
+
+                // Retrieve material from the hit mesh
+                UMaterialInterface* material = meshComponents[i]->GetMaterial(0);
+                FLinearColor hitColor;
+                UTexture* texture = nullptr;
+                if (material != nullptr)
+                {   
+                    printf("%d", i);
+                    material->GetVectorParameterValue(FName("BaseColor"), hitColor);
+                    material->GetTextureParameterValue(FName("BaseTexture"), texture);
+
+                    material->GetScalarParameterValue(FName("Intensity"), intensity);
+                    //intensity = (hitColor.R + hitColor.G + hitColor.B)/3;
+
+                    /*UTexture2D* texture2D = Cast<UTexture2D>(texture);// Lock the texture to read pixel data
+                    FTexture2DMipMap& mipMap = texture2D->PlatformData->Mips[0];
+                    void* data = mipMap.BulkData.Lock(LOCK_READ_ONLY);
+                    if (data)
+                    {
+                        // Ensure we access within bounds
+                        const int32 width = texture2D->GetSizeX();
+                        const int32 height = texture2D->GetSizeY();
+
+                        // Sample the pixel at the center
+                        if (width > 0 && height > 0)
+                        {
+                            int32 x = width / 2;
+                            int32 y = height / 2;
+
+                            // Assuming the texture format is RGBA8
+                            FColor* pixel = (FColor*)((uint8*)data + (y * width + x) * sizeof(FColor));
+                            hitColor = FLinearColor(*pixel); // Set hitColor from the sampled pixel
+                            intensity = (hitColor.R + hitColor.G + hitColor.B) / 3;
+
+                            mipMap.BulkData.Unlock(); // Unlock the data after use
+                        }
+                        mipMap.BulkData.Unlock(); // Ensure to unlock even if sampling fails
+                    }*/
+                }
             }
         }
 

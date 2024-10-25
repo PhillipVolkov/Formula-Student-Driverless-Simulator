@@ -7,6 +7,9 @@
 #include "common/AirSimSettings.hpp"
 #include "Vehicles/Car/SimModeCar.h"
 #include "GenericPlatform/GenericPlatformHttp.h"
+#include <iostream>
+#include <stdexcept>
+using namespace std;
 
 
 class AUnrealLog : public msr::airlib::Utils::Logger
@@ -117,8 +120,6 @@ void AAirSimGameMode::initializeSettings()
 
 bool AAirSimGameMode::getSettingsText(FString& settingsTextOutput) {
     return (
-        getSettingsTextFromCommandLine(settingsTextOutput)
-        ||
         readSettingsTextFromFile(common_utils::FileSystem::combine(std::string(TCHAR_TO_UTF8(*FPaths::LaunchDir())), "settings.json"), settingsTextOutput)
         ||
         readSettingsTextFromFile(common_utils::FileSystem::combine(common_utils::FileSystem::getExecutableFolder(), "settings.json"), settingsTextOutput)

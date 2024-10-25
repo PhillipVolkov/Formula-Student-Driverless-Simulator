@@ -35,7 +35,7 @@ client = fsds.FSDSClient()
 # Check network connection
 client.confirmConnection()
 
-lidardata = client.getLidarData(lidar_name = 'ExampleLidar')
+lidardata = client.getLidarData(lidar_name = 'Lidar1')
 
 # nanosecond timestamp of when the imu frame was captured
 print("lidardata nano: ", lidardata.time_stamp)
@@ -45,13 +45,15 @@ print("lidar pose: ", lidardata.pose)
 
 # Convert the list of floats into a list of xyz coordinates
 points = numpy.array(lidardata.point_cloud, dtype=numpy.dtype('f4'))
-points = numpy.reshape(points, (int(points.shape[0]/3), 3))
+points = numpy.reshape(points, (int(points.shape[0]/4), 4))
 
 print("number of hit points: ", len(points))
 
 for point in points:
-    x = point[0]
-    y = point[1]
-    z = point[2]
-    # do something with these values
-
+    x:float = point[0]
+    y:float = point[1]
+    z:float = point[2]
+    intesity = point[3]
+    # do something with these values    
+    if intesity > 0.15:
+        print("{:.3f}\t{:.3f}\t{:.3f}\t{:.20f}".format(x, y, z, intesity))
