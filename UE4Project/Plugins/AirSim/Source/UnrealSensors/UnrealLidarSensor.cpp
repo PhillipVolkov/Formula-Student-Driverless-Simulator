@@ -121,6 +121,8 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
     {
         //Store the segmentation id of the hit object.
         auto hitActor = hit_result.GetActor();
+
+        // Retrieve material from the hit mesh
         if (hitActor != nullptr)
         {
             TArray<UMeshComponent*> meshComponents;
@@ -129,10 +131,6 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
             {
                 segmentationID = segmentationID == -1 ? meshComponents[i]->CustomDepthStencilValue : segmentationID;
 
-
-                // Retrieve material from the hit mesh
-                UMaterialInterface* material = meshComponents[i]->GetMaterial(0);
-                material->GetScalarParameterValue(FName("Intensity"), intensity);
                 //FLinearColor hitColor;
                 //UTexture* texture = nullptr;
                 /*
@@ -168,6 +166,22 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
             }
         }
 
+        // Retrieve material from the hit mesh
+        UMaterialInterface* material = hit_result.GetComponent()->GetMaterial(0);
+        material->GetScalarParameterValue(FName("Intensity"), intensity);
+
+        FColor color = FColor::Black;
+
+        if (intensity > 0.69 && intensity < 0.71) {
+            color = FColor::Yellow;
+        }
+        if (intensity > 0.79 && intensity < 0.81) {
+            color = FColor::Blue;
+        }
+        if (intensity > 0.89 && intensity < 0.91) {
+            color = FColor::Red;
+        }
+
         if (false && UAirBlueprintLib::IsInGameThread())
         {
             // Debug code for very specific cases.
@@ -176,8 +190,8 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
                 actor_->GetWorld(),
                 hit_result.ImpactPoint,
                 5,                       //size
-                FColor::Red,
-                true,                    //persistent (never goes away)
+                color,
+                false,                    //persistent (never goes away)
                 0.1                      //point leaves a trail on moving object
             );
         }

@@ -49,11 +49,15 @@ points = numpy.reshape(points, (int(points.shape[0]/4), 4))
 
 print("number of hit points: ", len(points))
 
-for point in points:
-    x:float = point[0]
-    y:float = point[1]
-    z:float = point[2]
-    intesity = point[3]
-    # do something with these values    
-    if intesity > 0.15:
-        print("{:.3f}\t{:.3f}\t{:.3f}\t{:.20f}".format(x, y, z, intesity))
+print(f"Num Orange\t{numpy.count_nonzero(numpy.logical_and(points[:, 3] > 0.89, points[:, 3] < 0.91))}")
+print(f"Num Blue\t{numpy.count_nonzero(numpy.logical_and(points[:, 3] > 0.79, points[:, 3] < 0.81))}")
+print(f"Num Yellow\t{numpy.count_nonzero(numpy.logical_and(points[:, 3] > 0.69, points[:, 3] < 0.71))}")
+print(f"Num Ground\t{numpy.count_nonzero(numpy.logical_and(points[:, 3] > 0.09, points[:, 3] < 0.11))}")
+# for point in points:
+#     x:float = point[0]
+#     y:float = point[1]
+#     z:float = point[2]
+#     intesity = point[3]
+#     # do something with these values    
+#     if intesity > 0.15:
+#         print("{:.3f}\t{:.3f}\t{:.3f}\t{:.20f}".format(x, y, z, intesity))
