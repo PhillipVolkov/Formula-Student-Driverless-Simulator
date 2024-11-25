@@ -8,6 +8,8 @@
   "PawnPaths": {
     "DefaultCar": { "PawnBP": "Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'" }
   },
+  "LocalHostIp": "127.0.0.1",
+  "ApiServerPort": 41451,
   "Vehicles": {
     "FSCar": {
       "DefaultVehicleState": "",

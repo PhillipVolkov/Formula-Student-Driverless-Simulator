@@ -8,10 +8,11 @@ using dseconds = std::chrono::duration<double>;
 
 AirsimROSWrapper::AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, const std::string& host_ip, double timeout_sec) 
                                                                                                   : nh_(nh),
-                                                                                                    airsim_client_(host_ip, RpcLibPort, timeout_sec),
-                                                                                                    airsim_client_lidar_(host_ip, RpcLibPort, timeout_sec),
+                                                                                                    airsim_client_(host_ip, 8080, timeout_sec),
+                                                                                                    airsim_client_lidar_(host_ip, 8080, timeout_sec),
                                                                                                     static_tf_pub_(this->nh_)
 {
+    RCLCPP_INFO(nh_->get_logger(), "RUNNING ON PORT 8080");
     initialize_airsim(timeout_sec);
     try {
         std::string settings_text = airsim_client_.getSettingsString();

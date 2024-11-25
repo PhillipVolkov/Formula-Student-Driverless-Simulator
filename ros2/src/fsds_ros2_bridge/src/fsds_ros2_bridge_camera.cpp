@@ -190,7 +190,7 @@ int main(int argc, char ** argv)
     fps_statistic = ros_bridge::Statistics("fps");
 
     // ready airsim connection
-    msr::airlib::CarRpcLibClient client(host_ip, RpcLibPort, 5);
+    msr::airlib::CarRpcLibClient client(host_ip, 8080, 5);
     airsim_api = &client;
 
     double timeout_sec = nh->declare_parameter<double>("timeout", 10.0);

@@ -30,7 +30,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import fsds
 
 # connect to the AirSim simulator 
-client = fsds.FSDSClient()
+client = fsds.FSDSClient(ip="127.0.0.1", port=41451)
 
 # Check network connection
 client.confirmConnection()
